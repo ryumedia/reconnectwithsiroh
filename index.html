@@ -161,6 +161,9 @@
             width: 150px;
             border-radius: 50%;
         }
+        .header-image {
+            max-width: 50%;
+        }
         /* Modal Styles */
         .modal-overlay {
             position: fixed;
@@ -253,12 +256,24 @@
             .form-input {
                 margin-top: 0.25rem;
             }
+            .header-image {
+                max-width: 90%;
+            }
         }
     </style>
 </head>
 <body class="bg-gray-100 flex items-center justify-content min-h-screen">
 
-    <div class="app-container">
+    <!-- Welcome Pop-up -->
+    <div id="welcomeModal" class="modal-overlay">
+        <div class="modal-content space-y-4">
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgG3Pe2RcgV0FZLHhe-ovLjYIALQz-zR9H0Adsm3bF79N4QXbnjqRxKUimY2qM2xW_Jy2mo2aRn__EwPUvjkFhyyCbt4_NGIMtw3NRZtJj764-hfkaLvGpfcOhgzbCEFtGSp2LhWYdrTmcLZFx1xolvSojdl7mhSWpYdEbRxzUBwY7LCSqtPgESJlQ4Bzs/s886/banner%20reconnect.jpg"
+                 alt="Reconnect With Siroh Banner" class="w-full h-auto rounded-lg shadow-md">
+            <button id="openFormBtn" class="btn btn-submit">Isi Formulir</button>
+        </div>
+    </div>
+
+    <div id="appContainer" class="app-container" style="display: none;">
         
         <!-- Admin Icon -->
         <div id="adminIcon" class="admin-icon" title="Halaman Admin">
@@ -267,10 +282,8 @@
 
         <!-- Formulir View -->
         <div id="formView" class="view-section">
-            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiC2m9S2f4ysw5gGqUfzufyiYiCButHXkoheKc3SMmdgfI8KJ22B0-m_pBemahwcKs7x8lxJwE3-_i_HxsJhgq-35oJHc0N3SeBNz7eheHwDRBoapqpowYaPqAnERN-PqME252AVID2n_itecQgF43Ilx2FfkdFQmTVoy57_5xIwXllKYB1FGT3_8qY-Tg/s1023/logo%20wonderful%20siroh.jpg"
-                 alt="Reconnect With Siroh Logo" class="logo" onerror="this.onerror=null; this.src='https://placehold.co/150x150/e2e8f0/64748b?text=Logo+Acara'">
-            <h1 class="text-3xl font-bold text-center text-gray-800 mb-2 form-title">Reconnect With Siroh</h1>
-            <p class="text-center text-gray-600 mb-4 form-description">Silakan isi data diri Anda di bawah ini.</p>
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiVDnAfEF78VDJKD1km2JI9EWq7o8AP-8p0uN0cCNAPrdBPeloWDjEDPqbb0ZgfYW11o3JvdY55Hl6KzxFS-6UvFEOeJnpNu9GZD2sL8Mt11KVm5DggIUngF81U0PBBj0ctEV6CQjtRTn40hwPBLqum2aSbMDflm7ZPBmtw9JWQah42Bsut8iGYDHIDcI4/s708/banner%20reconnect%20cut.jpg"
+                 alt="Reconnect With Siroh Banner" class="header-image mx-auto h-auto mb-6 rounded-lg shadow-md">
             
             <form id="submissionForm" class="space-y-4">
                 <div id="formStatusMessage" class="hidden text-center text-lg font-semibold text-red-500 my-4">Pendaftaran sudah ditutup.</div>
@@ -458,6 +471,9 @@
         const appId = firebaseConfig.projectId;
 
         let app, db, auth;
+        const appContainer = document.getElementById('appContainer');
+        const welcomeModal = document.getElementById('welcomeModal');
+        const openFormBtn = document.getElementById('openFormBtn');
         const formView = document.getElementById('formView');
         const passwordView = document.getElementById('passwordView');
         const dashboardView = document.getElementById('dashboardView');
@@ -484,6 +500,17 @@
 
         const successModal = document.getElementById('successModal');
         const closeModalBtn = document.getElementById('closeModalBtn');
+
+        // Show welcome modal on page load
+        window.onload = () => {
+            welcomeModal.style.display = 'flex';
+        };
+
+        // Close welcome modal and show app content
+        openFormBtn.addEventListener('click', () => {
+            welcomeModal.style.display = 'none';
+            appContainer.style.display = 'flex';
+        });
         
         // Fungsi untuk mengelola tampilan
         function showView(view) {
